@@ -4,7 +4,7 @@ const paginatedResults = (model) => async(req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
     const total = await model.countDocuments().exec();
-    const pages = total/limit;
+    const pages = Math.ceil(total/limit);
 
     const startIndex = (page - 1) * limit;
     //const endIndex = page * limit;
