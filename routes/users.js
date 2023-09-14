@@ -6,6 +6,7 @@ const validate = require('../middlewares/validationMiddleware');
 const {Snowflake} = require('@theinternetfolks/snowflake');
 const bcrypt = require('bcrypt');
 const {userSignUpSchema, userSignInSchema} = require('../validations/userValidation');
+const authorizeToken = require('../middlewares/authorizeToken');
 const jwt = require('jsonwebtoken');
 
 //Create a User
@@ -65,6 +66,23 @@ router.post('/signin', validate(userSignInSchema), async(req,res)=>{
             };
             return res.status(200).json(response);
         }
+    }
+    catch(err){
+        res.status(500).json({message:err.message});
+    }
+});
+
+//Get a user
+router.get('/me', authorizeToken, async(req,res)=>{
+    try{
+        const user = await User.findOne({id: res.userId.id}, {__v: 0, _id: 0, password: 0});
+        const response = {
+            status: true,
+            content: {
+                data: user
+            }
+        };
+        return res.status(200).json(response);
     }
     catch(err){
         res.status(500).json({message:err.message});
