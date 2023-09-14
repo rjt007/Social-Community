@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     id:{
         type: String,
         unique: true,
-        required:true
+        required: true
     },
     name:{
         type: String,
@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
         type: String,
         maxLength: 128,
         unique: true,
-        lowercase: true
+        lowercase: true,
+        required: true
     },
     password:{
         type: String,
@@ -24,6 +25,7 @@ const userSchema = mongoose.Schema({
     },
     created_at:{
         type: Date,
+        immutable: true,
         default: Date.now
     }
 });
