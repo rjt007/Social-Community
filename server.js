@@ -8,10 +8,7 @@ const membersRoute = require('./routes/members');
 
 app.use(express.json());
 
-app.get('/',(req,res)=>{
-    res.json({request:'success'});
-});
-
+// Registering different routes
 app.use('/v1/role',rolesRoute);
 app.use('/v1/auth',usersRoute);
 app.use('/v1/community',communitiesRoute);
