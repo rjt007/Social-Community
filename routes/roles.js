@@ -4,7 +4,7 @@ const Role = require('../models/role');
 const {Snowflake} = require('@theinternetfolks/snowflake');
 const validate = require('../middlewares/validationMiddleware');
 const roleSchema = require('../validations/roleValidation');
-const paginatedResults = require('../middlewares/paginatedResults');
+const paginationRules = require('../middlewares/paginationMiddleware');
 
 //Create a New Role
 router.post('/', validate(roleSchema), async(req,res)=>{
@@ -24,10 +24,24 @@ router.post('/', validate(roleSchema), async(req,res)=>{
 });
 
 //Get all the Roles
-router.get('/', paginatedResults(Role), async(req,res)=>{
+router.get('/', paginationRules, async(req,res)=>{
     try{
-        const roles = res.results;
-        res.status(200).json(roles);
+        const {page, limit, startIndex} = res.rules;
+        const total = await Role.countDocuments().exec();
+        const pages = Math.ceil(total/limit);
+        const roles = await Role.find({},{_id: 0, __v: 0}).limit(limit).skip(startIndex).exec();
+        const response = {
+            status: true,
+            content: {
+                meta: {
+                    total: total,
+                    pages: pages,
+                    page: page
+                }
+            },
+            data: roles
+        };
+        res.status(200).json(response);
     }
     catch(err){
         res.status(500).json({message:err.message});
