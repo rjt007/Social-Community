@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const rolesRoute = require('./routes/roles');
 const usersRoute = require('./routes/users');
+const communitiesRoute = require('./routes/communities');
+const membersRoute = require('./routes/members');
 
 app.use(express.json());
 
@@ -12,6 +14,8 @@ app.get('/',(req,res)=>{
 
 app.use('/v1/role',rolesRoute);
 app.use('/v1/auth',usersRoute);
+app.use('/v1/community',communitiesRoute);
+app.use('/v1/member',membersRoute);
 
 //Connecting to database
 const connectDB = require('./config/db');
